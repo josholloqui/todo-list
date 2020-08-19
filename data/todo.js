@@ -1,17 +1,14 @@
 module.exports = [
   {
     task: 'walk the dog',
-    completed: false,
-    owner_id: 1
+    completed: false
   },
   {
     task: 'clean out the garage',
-    completed: false,
-    owner_id: 2
+    completed: false
   },
   {
     task: 'go grocery shopping for the week',
-    completed: false,
-    owner_id: 3
+    completed: false
   }
 ];
