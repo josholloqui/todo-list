@@ -70,6 +70,21 @@ describe('routes', () => {
     done();
   });
 
+  test('delete a single task and return nothing', async(done) => {
+    await fakeRequest(app)
+      .delete('/api/todo/4')
+      .set('Authorization', token)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    const data = await fakeRequest(app)
+      .get('/api/todo')
+      .set('Authorization', token)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(data.body).toEqual([]);
+    done();
+  });
+  
   // test('returns all guitars for the user when hitting GET /guitars', async(done) => {
   //   const expected = [
   //     {
@@ -103,23 +118,6 @@ describe('routes', () => {
   //     .expect('Content-Type', /json/)
   //     .expect(200);
   //   expect(data.body).toEqual(expected);
-  //   done();
-  // });
-
-  
-
-  // test('delete a single guitar for the user when hitting DELETE /guitars/:id', async(done) => {
-  //   await fakeRequest(app)
-  //     .delete('/api/guitars/4')
-  //     .set('Authorization', token)
-  //     .expect('Content-Type', /json/)
-  //     .expect(200);
-  //   const data = await fakeRequest(app)
-  //     .get('/api/guitars/')
-  //     .set('Authorization', token)
-  //     .expect('Content-Type', /json/)
-  //     .expect(200);
-  //   expect(data.body).toEqual([]);
   //   done();
   // });
 });
