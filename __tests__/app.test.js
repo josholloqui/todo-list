@@ -46,6 +46,30 @@ describe('routes', () => {
     done();
   });
 
+  test('updates a single task completed from false to true', async(done) => {
+    const expectation = {
+      id: 4,
+      task: 'walk finn',
+      completed: true,
+      owner_id: 2,
+    };
+    const updatedTask = {
+      id: 4,
+      task: 'walk finn',
+      completed: true,
+      owner_id: 2,
+    };
+    const data = await fakeRequest(app)
+      .put('/api/todo/4')
+      .send(updatedTask)
+      .set('Authorization', token)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    
+    expect(data.body).toEqual(expectation);
+    done();
+  });
+
   // test('returns all guitars for the user when hitting GET /guitars', async(done) => {
   //   const expected = [
   //     {
@@ -82,37 +106,7 @@ describe('routes', () => {
   //   done();
   // });
 
-  // test('updates a single guitar for the user when hitting PUT /guitars/:id', async(done) => {
-  //   const newGuitar = {
-  //     brand_id: 1,
-  //     color: 'cool red',
-  //     id: 4,
-  //     owner_id: 2,
-  //     strings: 6,
-  //   };
-  //   const expectedAllGuitars = [{
-  //     brand_name: 'Gibson',      
-  //     color: 'cool red',
-  //     id: 4,
-  //     owner_id: 2,
-  //     strings: 6,
-  //   }];
-  //   const data = await fakeRequest(app)
-  //     .put('/api/guitars/4')
-  //     .send(newGuitar)
-  //     .set('Authorization', token)
-  //     .expect('Content-Type', /json/)
-  //     .expect(200);
-  //   const allGuitars = await fakeRequest(app)
-  //     .get('/api/guitars')
-  //     .send(newGuitar)
-  //     .set('Authorization', token)
-  //     .expect('Content-Type', /json/)
-  //     .expect(200);
-  //   expect(data.body).toEqual(newGuitar);
-  //   expect(allGuitars.body).toEqual(expectedAllGuitars);
-  //   done();
-  // });
+  
 
   // test('delete a single guitar for the user when hitting DELETE /guitars/:id', async(done) => {
   //   await fakeRequest(app)
