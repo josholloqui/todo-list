@@ -46,6 +46,41 @@ describe('routes', () => {
     done();
   });
 
+  test('returns all task for the user when hitting GET /api/todo', async(done) => {
+    const expected = [
+      {
+        id: 4,
+        task: 'walk finn',
+        completed: false,
+        owner_id: 2,
+      },
+      
+    ];
+    const data = await fakeRequest(app)
+      .get('/api/todo')
+      .set('Authorization', token)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(data.body).toEqual(expected);
+    done();
+  });
+
+  test('returns a single task for the user when hitting GET /api/todo/:id', async(done) => {
+    const expected = {
+      id: 4,
+      task: 'walk finn',
+      completed: false,
+      owner_id: 2,
+    };
+    const data = await fakeRequest(app)
+      .get('/api/todo/4')
+      .set('Authorization', token)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(data.body).toEqual(expected);
+    done();
+  });
+
   test('updates a single task completed from false to true', async(done) => {
     const expectation = {
       id: 4,
@@ -84,40 +119,33 @@ describe('routes', () => {
     expect(data.body).toEqual([]);
     done();
   });
-  
-  // test('returns all guitars for the user when hitting GET /guitars', async(done) => {
-  //   const expected = [
-  //     {
-  //       brand_name: 'Taylor',
-  //       color: 'red',
-  //       id: 4,
-  //       owner_id: 2,
-  //       strings: 4,
-  //     },
-  //   ];
-  //   const data = await fakeRequest(app)
-  //     .get('/api/guitars')
-  //     .set('Authorization', token)
-  //     .expect('Content-Type', /json/)
-  //     .expect(200);
-  //   expect(data.body).toEqual(expected);
-  //   done();
-  // });
 
-  // test('returns a single guitar for the user when hitting GET /guitars/:id', async(done) => {
-  //   const expected = {
-  //     brand_name: 'Taylor',
-  //     color: 'red',
-  //     id: 4,
-  //     owner_id: 2,
-  //     strings: 4,
-  //   };
-  //   const data = await fakeRequest(app)
-  //     .get('/api/guitars/4')
-  //     .set('Authorization', token)
-  //     .expect('Content-Type', /json/)
-  //     .expect(200);
-  //   expect(data.body).toEqual(expected);
-  //   done();
-  // });
+  test('returns empty when get task is id that isn\'t attached to the user', async(done) => {
+    const expected = '';
+    
+    const data = await fakeRequest(app)
+      .get('/api/todo/1')
+      .set('Authorization', token)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(data.body).toEqual(expected);
+    done();
+  });
+
+  test('returns error when authorization token isn\'t present', async(done) => {
+    const expected = { 'error': 'no authorization found' };
+    
+    const getData = await fakeRequest(app)
+      .get('/api/todo')
+      .expect('Content-Type', /json/)
+      .expect(401);
+    const postData = await fakeRequest(app)
+      .post('/api/todo')
+      .send(newTask)
+      .expect('Content-Type', /json/)
+      .expect(401);
+    expect(getData.body).toEqual(expected);
+    expect(postData.body).toEqual(expected);
+    done();
+  });
 });
